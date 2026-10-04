@@ -325,8 +325,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Get Mesh Info"))
 	static FModelingMeshInfo GetMeshInfo(int32 Handle);
 
-	/** The UDynamicMesh behind a handle, for direct use with unreal.GeometryScript_* libraries (Python only). */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (DisplayName = "Get Dynamic Mesh"))
+	/** The UDynamicMesh behind a handle, for direct use with unreal.GeometryScript_* libraries (Python only).
+	 *  AIIgnore keeps it off the MCP tool list: the registry treats a static UFunction without AICallable as an error. */
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AIIgnore, DisplayName = "Get Dynamic Mesh"))
 	static UDynamicMesh* GetDynamicMesh(int32 Handle);
 
 	// =====================================================================
@@ -799,24 +800,24 @@ public:
 		const FString& SelectionName = TEXT(""), bool bAlignIslandsWithAxes = true);
 
 	/** Move / scale / rotate the UVs of a selection ("" = all) in UV space: scale and rotation are about Origin (0.5,0.5 = texture centre). */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Transform UV", ScriptName = "transform_uv;transform_uv"))
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Transform UV", ScriptName = "transform_uv"))
 	static FModelingResult TransformUV(int32 Handle, int32 UVLayer, const FString& SelectionName, FVector2D Translation, FVector2D Scale, float RotationDeg = 0.f, FVector2D Origin = FVector2D(0.5, 0.5));
 
 	/** LayoutType: "Repack" (pack islands into 0-1 for TextureResolution), "Stack" (all islands on top of each other), "Normalize" (scale to unit texel density), "Transform" (Scale + Translation). Works on a selection's islands. */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Layout UV", ScriptName = "layout_uv;layout_uv"))
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Layout UV", ScriptName = "layout_uv"))
 	static FModelingResult LayoutUV(int32 Handle, int32 UVLayer = 0, const FString& LayoutType = TEXT("Repack"), const FString& SelectionName = TEXT(""), int32 TextureResolution = 2048,
 		float Scale = 1.f, FVector2D Translation = FVector2D::ZeroVector);
 
 	/** Pack the islands of each material ID into their own full 0-1 range so every material slot gets its own texture set at full resolution. */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Pack UV Per Material", ScriptName = "pack_uv_per_material;pack_uv_per_material"))
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Pack UV Per Material", ScriptName = "pack_uv_per_material"))
 	static FModelingResult PackUVPerMaterial(int32 Handle, int32 UVLayer = 0, int32 TextureResolution = 2048);
 
 	/** Islands, coverage, overlap and texel density of a UV layer — check an unwrap before baking or painting. GridResolution is the raster used for coverage/overlap. */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Get UV Stats", ScriptName = "get_uv_stats;get_uv_stats"))
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "Get UV Stats", ScriptName = "get_uv_stats"))
 	static FModelingUVStats GetUVStats(int32 Handle, int32 UVLayer = 0, int32 GridResolution = 512);
 
 	/** UV coordinate of the surface point nearest to a mesh-space position (where a marking lands on the texture). Returns false when the mesh has no UVs there. */
-	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "World To UV", ScriptName = "world_to_uv;world_to_uv"))
+	UFUNCTION(BlueprintCallable, Category = "Vibe3D|Modeling", meta = (AICallable, DisplayName = "World To UV", ScriptName = "world_to_uv"))
 	static bool WorldToUV(int32 Handle, FVector Point, int32 UVLayer, FVector2D& OutUV);
 
 	// =====================================================================
